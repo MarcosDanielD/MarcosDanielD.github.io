@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marcos Daniel — Portfolio</title>
+<meta name="description" content="Portfólio de Marcos Daniel — Análise de Dados, Automação, Python, SQL, Power BI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0e14; --surface: #111820; --surface2: #161e28;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #e8edf3; --muted: #7a8898; --accent: #2dd4bf;
+    --accent-dim: rgba(45,212,191,0.1); --accent-dim2: rgba(45,212,191,0.06);
+  }
+  body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 48px 20px 80px; position: relative; overflow-x: hidden; }
+  #wave-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+  .container { max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px 30px; margin-bottom: 16px; transition: border-color 0.3s; }
+  .card:hover { border-color: var(--border2); }
+  .profile-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 20px; }
+  .avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #1a2a3a, #0f1e2e); border: 2px solid var(--border2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; color: var(--accent); letter-spacing: -1px; overflow: hidden; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .profile-info { flex: 1; }
+  .profile-name { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .profile-title { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.2); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 500; color: var(--accent); }
+  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .typing-container { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); margin-top: 16px; display: flex; align-items: center; gap: 6px; }
+  .typing-prefix { color: var(--accent); }
+  .cursor { display: inline-block; width: 2px; height: 14px; background: var(--accent); animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .meta-row { display: flex; align-items: center; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .meta-item { font-size: 12px; color: var(--muted); }
+  .meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); margin: 0 2px; }
+  .skills-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .skill-tag { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; transition: all 0.2s; cursor: default; }
+  .skill-tag:hover { color: var(--accent); border-color: rgba(45,212,191,0.3); background: var(--accent-dim2); }
+  .socials { display: flex; justify-content: center; gap: 12px; margin-bottom: 16px; }
+  .social-btn { width: 52px; height: 52px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--muted); transition: all 0.25s; }
+  .social-btn:hover { border-color: rgba(45,212,191,0.4); color: var(--accent); background: var(--accent-dim); transform: translateY(-2px); }
+  .social-btn svg { width: 20px; height: 20px; }
+  .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .section-title { font-size: 16px; font-weight: 600; color: #fff; }
+  .section-underline { width: 28px; height: 2px; background: var(--accent); border-radius: 2px; margin-bottom: 14px; }
+  .section-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .view-all { font-size: 12px; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 4px; transition: gap 0.2s; }
+  .view-all:hover { gap: 8px; }
+  #projects-list { display: flex; flex-direction: column; gap: 10px; }
+  .project-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; display: flex; justify-content: space-between; align-items: flex-start; transition: all 0.25s; text-decoration: none; color: inherit; }
+  .project-card:hover { border-color: rgba(45,212,191,0.25); background: rgba(45,212,191,0.03); }
+  .project-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+  .project-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .project-meta { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .project-lang { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+  .lang-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .project-stars { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .project-open { font-size: 12px; color: var(--accent); white-space: nowrap; flex-shrink: 0; margin-top: 4px; padding-left: 12px; }
+  .cert-list { display: flex; flex-direction: column; gap: 10px; }
+  .cert-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px; transition: all 0.25s; text-decoration: none; color: inherit; }
+  .cert-card:hover { border-color: rgba(45,212,191,0.25); background: rgba(45,212,191,0.03); }
+  .cert-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; background: var(--accent-dim); border: 1px solid rgba(45,212,191,0.2); display: flex; align-items: center; justify-content: center; }
+  .cert-icon svg { width: 20px; height: 20px; color: var(--accent); }
+  .cert-info { flex: 1; min-width: 0; }
+  .cert-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+  .cert-issuer { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .cert-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .cert-tag { font-size: 11px; color: var(--accent); background: var(--accent-dim2); border: 1px solid rgba(45,212,191,0.15); border-radius: 6px; padding: 2px 8px; }
+  .cert-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .cert-date { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .cert-open { font-size: 12px; color: var(--accent); flex-shrink: 0; padding-left: 12px; margin-top: 2px; }
+  .skeleton { background: linear-gradient(90deg, var(--surface2) 25%, rgba(255,255,255,0.04) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  .skeleton-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+  .sk-line { height: 12px; margin-bottom: 8px; }
+  .sk-short { width: 40%; } .sk-medium { width: 65%; } .sk-long { width: 90%; }
+  .error-msg { font-size: 13px; color: var(--muted); text-align: center; padding: 24px; border: 1px dashed var(--border2); border-radius: 14px; line-height: 1.8; }
+  .error-msg a { color: var(--accent); text-decoration: none; }
+  .footer { text-align: center; font-size: 12px; color: var(--muted); margin-top: 32px; }
+  .bot-btn { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; font-family: 'Space Grotesk', sans-serif; position: fixed; bottom: 24px; z-index: 10; }
+  .bot-btn:hover { border-color: rgba(45,212,191,0.4); color: var(--accent); }
+  .bot-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .btn-email { left: 24px; }
+  .btn-cv { right: 24px; }
+  .card, .socials { animation: fadeUp 0.5s ease both; }
+  .card:nth-child(1){animation-delay:.05s} .card:nth-child(2){animation-delay:.15s} .card:nth-child(3){animation-delay:.25s} .card:nth-child(4){animation-delay:.35s}
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  @media (max-width: 480px) {
+    body { padding: 24px 14px 100px; }
+    .profile-name { font-size: 18px; }
+    .card { padding: 20px 18px; }
+    .avatar { width: 58px; height: 58px; font-size: 20px; }
+    .bot-btn span { display: none; }
+    .bot-btn { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="wave-canvas"></canvas>
+
+<div class="container">
+  <div class="card">
+    <div class="profile-header">
+      <div class="avatar" id="avatar">MD</div>
+      <div class="profile-info">
+        <div class="profile-name">Marcos Daniel</div>
+        <div class="profile-title">Análise de Dados · TOTVS · Automação · Back-end · Python</div>
+        <span class="badge">Aberto a estágio</span>
+      </div>
+    </div>
+    <div class="typing-container">
+      <span class="typing-prefix">&gt;</span>&nbsp;<span id="typing-el"></span><span class="cursor"></span>
+    </div>
+    <div class="meta-row">
+      <div class="meta-item">20 anos</div><div class="meta-dot"></div>
+      <div class="meta-item">Brasil, PR</div><div class="meta-dot"></div>
+      <div class="meta-item">Focado em aprendizado contínuo</div>
+    </div>
+    <div class="skills-row">
+      <span class="skill-tag">Python</span><span class="skill-tag">SQL</span>
+      <span class="skill-tag">Power BI</span><span class="skill-tag">Excel</span>
+      <span class="skill-tag">Power Platform</span><span class="skill-tag">TOTVS</span>
+      <span class="skill-tag">Automação</span><span class="skill-tag">Back-end</span>
+    </div>
+  </div>
+
+  <div class="socials">
+    <a class="social-btn" href="https://www.linkedin.com/in/marcosdanieldev" target="_blank" rel="noopener" title="LinkedIn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+    <a class="social-btn" href="https://github.com/MarcosDanielD" target="_blank" rel="noopener" title="GitHub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+    </a>
+    <a class="social-btn" href="mailto:mdrdaniel002@gmail.com" title="Email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="section-header">
+      <div><div class="section-title">Projetos</div><div class="section-underline"></div></div>
+      <a href="https://github.com/MarcosDanielD?tab=repositories" target="_blank" class="view-all">Ver todos →</a>
+    </div>
+    <div class="section-sub">Repositórios do meu GitHub, atualizados automaticamente.</div>
+    <div id="projects-list">
+      <div class="skeleton-card"><div class="skeleton sk-line sk-medium"></div><div class="skeleton sk-line sk-long"></div><div class="skeleton sk-line sk-short" style="margin-top:4px"></div></div>
+      <div class="skeleton-card"><div class="skeleton sk-line sk-medium"></div><div class="skeleton sk-line sk-long"></div><div class="skeleton sk-line sk-short" style="margin-top:4px"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-header">
+      <div><div class="section-title">Certificados</div><div class="section-underline"></div></div>
+    </div>
+    <div class="section-sub">Formações e cursos concluídos.</div>
+    <div class="cert-list">
+      <div class="cert-card">
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+        </div>
+        <div class="cert-info">
+          <div class="cert-name">Assistente Administrativo</div>
+          <div class="cert-issuer">SENAI — Cidade Industrial de Curitiba · Aprendizagem Industrial</div>
+          <div class="cert-tags">
+            <span class="cert-tag">Raciocínio Lógico</span><span class="cert-tag">Análise de Dados</span>
+            <span class="cert-tag">Gestão Financeira</span><span class="cert-tag">Organização do Trabalho</span>
+          </div>
+          <div class="cert-meta">
+            <span class="cert-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Out 2025</span>
+          </div>
+        </div>
+      </div>
+      <a class="cert-card" href="https://udemy-certificate.s3.amazonaws.com/pdf/UC-8b9ee26b-a8ec-45c2-a80f-60e5a9a8b98e.pdf" target="_blank" rel="noopener">
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div class="cert-info">
+          <div class="cert-name">Banco de Dados e SQL, sem mistérios</div>
+          <div class="cert-issuer">Udemy · Felipe Mafra</div>
+          <div class="cert-tags">
+            <span class="cert-tag">SQL</span><span class="cert-tag">Banco de Dados</span>
+            <span class="cert-tag">Consultas</span><span class="cert-tag">Modelagem</span>
+          </div>
+          <div class="cert-meta">
+            <span class="cert-date"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Jan 2026</span>
+          </div>
+        </div>
+        <div class="cert-open">Ver →</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">© 2026 Marcos Daniel</div>
+</div>
+
+<a class="bot-btn btn-email" href="mailto:mdrdaniel002@gmail.com">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  <span>Fale comigo</span>
+</a>
+
+<a class="bot-btn btn-cv" href="curriculo.pdf" download="Curriculo_Marcos_Daniel.pdf">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  <span>Currículo</span>
+</a>
+
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+  /* ── WAVES ── */
+  var canvas = document.getElementById('wave-canvas');
+  var ctx = canvas.getContext('2d');
+  var W, H;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  var waves = [
+    {amp:70,  freq:0.0018, speed:0.00022, offset:0, y:0.38, alpha:0.18, color:'45,212,191'},
+    {amp:100, freq:0.0013, speed:0.00015, offset:0, y:0.55, alpha:0.13, color:'8,145,178'},
+    {amp:60,  freq:0.0022, speed:0.00028, offset:0, y:0.70, alpha:0.11, color:'45,212,191'},
+    {amp:120, freq:0.0010, speed:0.00010, offset:0, y:0.25, alpha:0.10, color:'8,145,178'}
+  ];
+  var lastTime = null;
+  function drawWave(w) {
+    ctx.beginPath();
+    ctx.moveTo(0, H);
+    for (var x = 0; x <= W; x += 3) {
+      ctx.lineTo(x, w.y * H + Math.sin(x * w.freq + w.offset) * w.amp);
+    }
+    ctx.lineTo(W, H);
+    ctx.closePath();
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, 'rgba(' + w.color + ',' + w.alpha + ')');
+    g.addColorStop(1, 'rgba(' + w.color + ',0)');
+    ctx.fillStyle = g;
+    ctx.fill();
+  }
+  function animate(ts) {
+    if (lastTime === null) lastTime = ts;
+    var delta = ts - lastTime;
+    lastTime = ts;
+    ctx.clearRect(0, 0, W, H);
+    waves.forEach(function(w) {
+      w.offset += w.speed * delta;
+      drawWave(w);
+    });
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+
+  /* ── TYPING ── */
+  var GITHUB_USER = 'MarcosDanielD';
+  var HIDDEN_REPOS = [GITHUB_USER + '.github.io', GITHUB_USER.toLowerCase() + '.github.io'];
+  var LANG_COLORS = {
+    Python:'#3572A5', JavaScript:'#f1e05a', TypeScript:'#2b7489',
+    Java:'#b07219', HTML:'#e34c26', CSS:'#563d7c', SQL:'#e38c00',
+    Kotlin:'#F18E33', Shell:'#89e051', 'Jupyter Notebook':'#DA5B0B', default:'#7a8898'
+  };
+  var phrases = [
+    'Focado em aprendizado contínuo.',
+    'Transformando dados em decisões.',
+    'Automatizando o que pode ser automatizado.',
+    'Em busca de um estágio desafiador.'
+  ];
+  var pi = 0, ci = 0, deleting = false, wait = 0;
+  var typEl = document.getElementById('typing-el');
+  function type() {
+    if (wait > 0) { wait--; setTimeout(type, 50); return; }
+    var p = phrases[pi];
+    if (!deleting) {
+      typEl.textContent = p.slice(0, ++ci);
+      if (ci === p.length) { deleting = true; wait = 40; }
+      setTimeout(type, 60);
+    } else {
+      typEl.textContent = p.slice(0, --ci);
+      if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; wait = 10; }
+      setTimeout(type, 35);
+    }
+  }
+  type();
+
+  /* ── AVATAR ── */
+  fetch('https://api.github.com/users/' + GITHUB_USER)
+    .then(function(r) { return r.json(); })
+    .then(function(u) {
+      if (u.avatar_url) {
+        document.getElementById('avatar').innerHTML = '<img src="' + u.avatar_url + '" alt="Avatar">';
+      }
+    }).catch(function() {});
+
+  /* ── REPOS ── */
+  function fmtDate(iso) {
+    return new Date(iso).toLocaleDateString('pt-BR', {day:'2-digit', month:'short', year:'numeric'});
+  }
+  function repoCard(r) {
+    var color = LANG_COLORS[r.language] || LANG_COLORS.default;
+    var langHtml = r.language ? '<span class="project-lang"><span class="lang-dot" style="background:' + color + '"></span>' + r.language + '</span>' : '';
+    return '<a class="project-card" href="' + r.html_url + '" target="_blank" rel="noopener">'
+      + '<div style="flex:1;min-width:0">'
+      + '<div class="project-name">' + r.name + '</div>'
+      + '<div class="project-desc">' + (r.description || 'Sem descrição.') + '</div>'
+      + '<div class="project-meta">' + langHtml
+      + '<span class="project-stars"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' + r.stargazers_count + '</span>'
+      + '<span class="project-lang">Atualizado: ' + fmtDate(r.updated_at) + '</span>'
+      + '</div></div>'
+      + '<div class="project-open">Abrir →</div></a>';
+  }
+  var list = document.getElementById('projects-list');
+  fetch('https://api.github.com/users/' + GITHUB_USER + '/repos?sort=updated&per_page=20')
+    .then(function(r) { return r.json(); })
+    .then(function(repos) {
+      var filtered = repos.filter(function(r) {
+        return !r.fork && HIDDEN_REPOS.indexOf(r.name) === -1 && r.name !== GITHUB_USER;
+      });
+      if (filtered.length === 0) {
+        list.innerHTML = '<div class="error-msg">Nenhum repositório público encontrado ainda.<br>Crie um projeto no <a href="https://github.com/' + GITHUB_USER + '" target="_blank">GitHub</a> e aparecerá aqui automaticamente!</div>';
+        return;
+      }
+      list.innerHTML = filtered.map(repoCard).join('');
+    })
+    .catch(function() {
+      list.innerHTML = '<div class="error-msg">Não foi possível carregar os projetos agora.<br><a href="https://github.com/' + GITHUB_USER + '?tab=repositories" target="_blank">Ver repositórios no GitHub →</a></div>';
+    });
+
+});
+</script>
+</body>
+</html>
